@@ -1,0 +1,20 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AAAAAAA Test Deduplicated Rule
+description: |-
+  This rule should be deduplicated
+enabled: false
+severity: High
+query_text: |-
+  * | count
+time_range_s: 60
+run_frequency_s: 60
+dedup_window_s: 3600
+event_sink_keys:
+- event_sink
+tags:
+alert_template:
+  info:
+    - label: Key
+      value: "Blah"
+      use_for_dedup: true
+
