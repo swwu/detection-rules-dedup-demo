@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Playground log flow ceased
+description: |-
+  Detects when the scanner-playground-input S3 bucket stops receiving GetObject requests,
+  meaning data has stopped flowing to the playground environments.
+enabled: true
+severity: Critical
+query_text: |-
+  %ingest.source_type = "aws:cloudtrail"
+  eventName: GetObject
+  requestParameters.bucketName: scanner-playground-input
+  | count
+  | where @q.count = 0
+time_range_s: 900
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- scanner.playground
+tests:
+- name: Test nested JSON with null and bool values
+  now_timestamp: 2026-05-06T10:15:00.000Z
+  dataset_inline: |
+    {"timestamp":"2026-05-06T10:08:00.000Z","%ingest.source_type":"aws:cloudtrail","eventName":"GetObject","requestParameters":{"bucketName":"scanner-playground-input","key":"input/log-1.json","versionId":null},"readOnly":true,"userIdentity":{"type":"AssumedRole","sessionContext":{"attributes":{"mfaAuthenticated":false}}}}
+    {"timestamp":"2026-05-06T10:10:00.000Z","%ingest.source_type":"aws:cloudtrail","eventName":"GetObject","requestParameters":{"bucketName":"scanner-playground-input","key":"input/log-2.json","versionId":null},"readOnly":true,"userIdentity":{"type":"AssumedRole","sessionContext":{"attributes":{"mfaAuthenticated":false}}}}
+    {"timestamp":"2026-05-06T10:13:00.000Z","%ingest.source_type":"aws:cloudtrail","eventName":"GetObject","requestParameters":{"bucketName":"scanner-playground-input","key":"input/log-3.json","versionId":null},"readOnly":true,"userIdentity":{"type":"AssumedRole","sessionContext":{"attributes":{"mfaAuthenticated":false}}}}
+  expected_detection_result: false
+
