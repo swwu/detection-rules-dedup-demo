@@ -1,14 +1,15 @@
 # schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
-name: AAAAAAA Test Deduplicated Rule
+name: AAAAAAA Test Fanout Rule
 description: |-
-  This rule should be deduplicated
-enabled: false
+  This rule should be fanouted
+enabled: true
 severity: High
 query_text: |-
-  * | count
+  * | groupbycount @ecs.cloud.region
 time_range_s: 60
 run_frequency_s: 60
-dedup_window_s: 3601
+dedup_window_s: 3600
+alert_per_row: true
 event_sink_keys:
 - event_sink
 tags:
