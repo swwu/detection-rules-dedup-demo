@@ -1,0 +1,15 @@
+name: Sync Detection Rules
+on:
+  push:
+    branches: [main, test-sync-detection-rules]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: scanner-inc/sync-detection-rules@v0.1.0
+        with:
+          scanner_api_url: "${{ vars.SCANNER_API_URL }}"
+          scanner_api_key: "${{ secrets.SCANNER_API_KEY }}"
+          push_key: "${{ vars.SCANNER_PUSH_KEY }}"
